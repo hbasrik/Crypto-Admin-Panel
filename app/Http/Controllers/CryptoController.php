@@ -37,16 +37,17 @@ class CryptoController extends Controller
     {
         $historicalData = $this->cryptoService->getHistoricalData($id);
 
-        
+
         $timestamps = [];
         $prices = [];
         foreach ($historicalData as $point) {
-            $timestamps[] = date('H:i', strtotime($point['time'])); 
-            $prices[] = $point['price']; 
+            $timestamps[] = date('H:i', strtotime($point['time']));
+            $prices[] = $point['price'];
         }
 
         return response()->json([
             'timestamps' => $timestamps,
             'prices' => $prices,
         ]);
+    }
 }
