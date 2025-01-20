@@ -20,13 +20,17 @@ class CryptoController extends Controller
 
         $cryptoData = $this->cryptoService->getCryptoData();
 
-        $cryptoNames = json_encode(array_column($cryptoData['data'], 'name'));
-    $cryptoPrices = json_encode(array_map(function ($crypto) {
-        return $crypto['quote']['USD']['price'];
-    }, $cryptoData['data']));
+        $cryptoProcessedData = array_map(function ($crypto) {
+            return [
+                'id' => $crypto['id'],
+                'name' => $crypto['name'],
+                'price' => $crypto['quote']['USD']['price'],
 
-    return view('crypto.index', [
-        'cryptoNames' => $cryptoNames, 
-        'cryptoPrices' => $cryptoPrices, 
-    ]);
+            ];
+        }, $cryptoData['data']);
+
+        return view('dashboard.index', [
+            'cryptoData' => $cryptoProcessedData,
+        ]);
+    }
 }
