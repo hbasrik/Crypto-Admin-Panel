@@ -20,36 +20,33 @@ class CryptoController extends Controller
 
         $cryptoData = $this->cryptoService->getCryptoData();
 
-        $cryptoProcessedData = array_map(function ($crypto) {
-            return [
-                'id' => $crypto['id'],
-                'name' => $crypto['name'],
-                'price' => $crypto['quote']['USD']['price'],
-
-            ];
+        $cryptoNames = array_column($cryptoData['data'], 'name');
+        $cryptoPrices = array_map(function ($crypto) {
+            return $crypto['quote']['USD']['price'];
         }, $cryptoData['data']);
 
+
         return view('dashboard.index', [
-            'cryptoData' => $cryptoProcessedData,
+            'cryptoData' => $cryptoData['data'],
+            'cryptoNames' => $cryptoNames,
+            'cryptoPrices' => $cryptoPrices,
         ]);
     }
 
     public function getChartData($id)
     {
-        $response = $this->cryptoService->getHistoricalData($id);
+        $historicalData = $this->cryptoService->getHistoricalData($id);
 
-        // Parse response for chart data
-        $timestamps = array_map(function ($data) {
-            return date('H:i', strtotime($data['time']));
-        }, $response['data']['quotes']);
-
-        $prices = array_map(function ($data) {
-            return $data['quote']['USD']['price'];
-        }, $response['data']['quotes']);
+        
+        $timestamps = [];
+        $prices = [];
+        foreach ($historicalData as $point) {
+            $timestamps[] = date('H:i', strtotime($point['time'])); 
+            $prices[] = $point['price']; 
+        }
 
         return response()->json([
             'timestamps' => $timestamps,
             'prices' => $prices,
         ]);
-    }
 }
