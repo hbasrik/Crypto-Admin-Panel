@@ -35,19 +35,30 @@ class CryptoController extends Controller
 
     public function getChartData($id)
     {
-        $historicalData = $this->cryptoService->getHistoricalData($id);
+        try {
+
+            Log::info('Fetching chart data for coin ID: ' . $id);
 
 
-        $timestamps = [];
-        $prices = [];
-        foreach ($historicalData as $point) {
-            $timestamps[] = date('H:i', strtotime($point['time']));
-            $prices[] = $point['price'];
+            $historicalData = $this->cryptoService->getHistoricalData($id);
+
+
+            $timestamps = [];
+            $prices = [];
+            foreach ($historicalData as $point) {
+                $timestamps[] = date('H:i', strtotime($point['time']));
+                $prices[] = $point['price'];
+            }
+
+            return response()->json([
+                'timestamps' => $timestamps,
+                'prices' => $prices,
+            ]);
+        } catch (\Exception $e) {
+
+            Log::error('Error fetching chart data: ' . $e->getMessage());
+
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        return response()->json([
-            'timestamps' => $timestamps,
-            'prices' => $prices,
-        ]);
     }
 }
