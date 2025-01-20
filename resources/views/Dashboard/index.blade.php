@@ -68,16 +68,19 @@
         });
 
 
+        let chartInstance;
+
         function renderChart(chartData) {
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
 
             const ctx = document.getElementById('coinChart').getContext('2d');
 
 
-            if (window.myChart) {
-                window.myChart.destroy();
-            }
 
-            window.myChart = new Chart(ctx, {
+            chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: chartData.timestamps,
