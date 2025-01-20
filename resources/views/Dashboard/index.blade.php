@@ -26,6 +26,8 @@
         <div id="coinDetail" class="mt-4">
             <h2 id="coinName"></h2>
             <p id="coinPrice"></p>
+            <p id="coinChange"></p>
+            <p id="coinVolume"></p>
 
 
             <canvas id="coinChart" width="400" height="200"></canvas>
@@ -33,30 +35,77 @@
     </div>
 
     <script>
-        const cryptoNames = JSON.parse('@json($cryptoNames)');
-        const cryptoPrices = JSON.parse('@json($cryptoPrices)');
-        const ctx = document.getElementById('cryptoChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: cryptoNames,
-                datasets: [{
-                    label: 'Crypto Prices (USD)',
-                    data: cryptoPrices,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+        const cryptoData = JSON.parse('@json($cryptoData)');
+
+
+        document.getElementById('cryptoSelect').addEventListener('change', function() {
+            const coinId = this.value;
+
+
+            const selectedCoin = cryptoData.find(coin => coin.id == coinId);
+
+            if (selectedCoin) {
+
+                document.getElementById('coinName').innerText = selectedCoin.name;
+                document.getElementById('coinPrice').innerText = `Price: $${selectedCoin.quote.USD.price.toFixed(2)}`;
+                document.getElementById('coinChange').innerText = `Change (24h): ${selectedCoin.quote.USD.percent_change_24h.toFixed(2)}%`;
+                document.getElementById('coinVolume').innerText = `Volume (24h): ${selectedCoin.quote.USD.volume_24h.toFixed(2)}`;
+
+
+                document.getElementById('coinDetail').style.display = 'block';
+
+
+                fetch(`/crypto/chart-data/${coinId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        renderChart(data);
+                    })
+                    .catch(error => console.error('Error fetching chart data:', error));
+            } else {
+
+                document.getElementById('coinDetail').style.display = 'none';
             }
         });
+
+
+        function renderChart(chartData) {
+
+            const ctx = document.getElementById('coinChart').getContext('2d');
+
+
+            if (window.myChart) {
+                window.myChart.destroy();
+            }
+
+            window.myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartData.timestamps,
+                    datasets: [{
+                        label: 'Price (USD)',
+                        data: chartData.prices,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 2,
+                        fill: true,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                        },
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'hour',
+                            },
+                        },
+                    },
+                },
+            });
+        }
     </script>
 </body>
 
