@@ -25,8 +25,13 @@
 
         <div id="coinDetail" class="mt-4">
             <h2 id="coinName"></h2>
+            <p id="coinSymbol"></p>
             <p id="coinPrice"></p>
-            <p id="coinChange"></p>
+            <p id="coinChange1h"></p>
+            <p id="coinChange24h"></p>
+            <p id="coinChange7d"></p>
+            <p id="coinChange30d"></p>
+            <p id="coinChange90d"></p>
             <p id="coinVolume"></p>
 
 
@@ -47,9 +52,15 @@
             if (selectedCoin) {
 
                 document.getElementById('coinName').innerText = selectedCoin.name;
-                document.getElementById('coinPrice').innerText = `Price: $${selectedCoin.quote.USD.price.toFixed(2)}`;
-                document.getElementById('coinChange').innerText = `Change (24h): ${selectedCoin.quote.USD.percent_change_24h.toFixed(2)}%`;
-                document.getElementById('coinVolume').innerText = `Volume (24h): ${selectedCoin.quote.USD.volume_24h.toFixed(2)}`;
+                document.getElementById('coinSymbol').innerText = `Symbol: ${selectedCoin.symbol}`;
+                document.getElementById('coinPrice').innerText = `Price: $${selectedCoin.price.toFixed(2)}`;
+                document.getElementById('coinChange1h').innerText = `Change (1h): ${selectedCoin.percent_change_1h.toFixed(2)}%`;
+                document.getElementById('coinChange24h').innerText = `Change (24h): ${selectedCoin.percent_change_24h.toFixed(2)}%`;
+                document.getElementById('coinChange7d').innerText = `Change (7d): ${selectedCoin.percent_change_7d.toFixed(2)}%`;
+                document.getElementById('coinChange30d').innerText = `Change (30d): ${selectedCoin.percent_change_30d.toFixed(2)}%`;
+                document.getElementById('coinChange90d').innerText = `Change (90d): ${selectedCoin.percent_change_90d.toFixed(2)}%`;
+                document.getElementById('coinVolume').innerText = `Volume (24h): ${selectedCoin.volume_24h.toFixed(2)}`;
+
 
 
                 document.getElementById('coinDetail').style.display = 'block';
