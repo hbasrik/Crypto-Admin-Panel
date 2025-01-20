@@ -33,9 +33,8 @@
     </div>
 
     <script>
-        const cryptoNames = @json($cryptoNames);
-        const cryptoPrices = @json($cryptoPrices);
-
+        const cryptoNames = JSON.parse('@json($cryptoNames)');
+        const cryptoPrices = JSON.parse('@json($cryptoPrices)');
         const ctx = document.getElementById('cryptoChart').getContext('2d');
         new Chart(ctx, {
             type: 'bar',
