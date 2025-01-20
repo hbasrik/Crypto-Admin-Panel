@@ -33,4 +33,23 @@ class CryptoController extends Controller
             'cryptoData' => $cryptoProcessedData,
         ]);
     }
+
+    public function getChartData($id)
+    {
+        $response = $this->cryptoService->getHistoricalData($id);
+
+        // Parse response for chart data
+        $timestamps = array_map(function ($data) {
+            return date('H:i', strtotime($data['time']));
+        }, $response['data']['quotes']);
+
+        $prices = array_map(function ($data) {
+            return $data['quote']['USD']['price'];
+        }, $response['data']['quotes']);
+
+        return response()->json([
+            'timestamps' => $timestamps,
+            'prices' => $prices,
+        ]);
+    }
 }
