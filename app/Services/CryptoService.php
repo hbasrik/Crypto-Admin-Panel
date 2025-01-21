@@ -35,6 +35,14 @@ class CryptoService
 
     public function getHistoricalData($id)
     {
+
+        $endTime = strtotime('now');
+        $endTime = strtotime(date('Y-m-d H:00:00', $endTime)); // ROUND TO WHOLE HOUR
+
+        // Subtract 24 hours and round down to the nearest hour for start time
+        $startTime = $endTime - (24 * 60 * 60); // 24 HOURS AGO
+        $startTime = strtotime(date('Y-m-d H:00:00', $startTime)); // ROUND TO WHOLE HOUR
+
         $response = $this->client->get("v1/cryptocurrency/quotes/historical", [
             'headers' => [
                 'X-CMC_PRO_API_KEY' => env('COINMARKETCAP_API_KEY'),
@@ -42,10 +50,13 @@ class CryptoService
             ],
             'query' => [
                 'id' => $id,
-                'interval' => '5m',
+                'interval' => '30m',
+                'time_start' => date('Y-m-d\TH:i:s', $startTime),
+                'time_end' => date('Y-m-d\TH:i:s', $endTime),
             ],
         ]);
 
-        return json_decode($response->getBody(), true)['data']['quotes'];
+        $data = json_decode($response->getBody(), true);
+        return $data['data']['quotes'] ?? [];
     }
 }
