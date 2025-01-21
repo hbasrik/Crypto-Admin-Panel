@@ -19,6 +19,7 @@ class CryptoController extends Controller
     {
 
         $cryptoData = $this->cryptoService->getCryptoData();
+
         $cryptoProcessedData = array_map(function ($crypto) {
             return [
                 'id' => $crypto['id'],
@@ -43,13 +44,11 @@ class CryptoController extends Controller
     {
         try {
 
-            // Log::info('Fetching chart data for coin ID: ' . $id);
-
+            Log::info('Fetching chart data for coin ID: ' . $id);
 
             $historicalData = $this->cryptoService->getHistoricalData($id);
 
-            // dd($historicalData)
-
+            // dd($historicalData);
             $timestamps = [];
             $prices = [];
             foreach ($historicalData as $point) {
@@ -60,18 +59,10 @@ class CryptoController extends Controller
             return response()->json([
                 'timestamps' => $timestamps,
                 'prices' => $prices,
-                'symbol' => $historicalData[0]['symbol'],
-                'percent_changes' => [
-                    '1h' => $historicalData[0]['quote']['USD']['percent_change_1h'],
-                    '24h' => $historicalData[0]['quote']['USD']['percent_change_24h'],
-                    '7d' => $historicalData[0]['quote']['USD']['percent_change_7d'],
-                    '30d' => $historicalData[0]['quote']['USD']['percent_change_30d'],
-                    '90d' => $historicalData[0]['quote']['USD']['percent_change_90d']
-                ],
             ]);
         } catch (\Exception $e) {
 
-            // Log::error('Error fetching chart data: ' . $e->getMessage());
+            Log::error('Error fetching chart data: ' . $e->getMessage());
 
             return response()->json(['error' => $e->getMessage()], 500);
         }

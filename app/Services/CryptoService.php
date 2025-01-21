@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Log;
 
 class CryptoService
 {
@@ -25,35 +24,28 @@ class CryptoService
                 'Accept' => 'application/json',
             ],
             'query' => [
-                'limit' => 10, // Fetch top 10 cryptocurrencies
+                'limit' => 100,
                 'convert' => 'USD',
             ],
+
         ]);
 
-        return json_decode($response->getBody()->getContents(), true);
+        return json_decode($response->getBody(), true);
     }
 
     public function getHistoricalData($id)
     {
-        try {
-            $response = $this->client->get('v1/cryptocurrency/quotes/historical', [
-                'headers' => [
-                    'X-CMC_PRO_API_KEY' => env('COINMARKETCAP_API_KEY'),
-                    'Accept' => 'application/json',
-                ],
-                'query' => [
-                    'id' => $id,
-                    'interval' => '5m',
-                ],
-            ]);
+        $response = $this->client->get("v1/cryptocurrency/quotes/historical", [
+            'headers' => [
+                'X-CMC_PRO_API_KEY' => env('COINMARKETCAP_API_KEY'),
+                'Accept' => 'application/json',
+            ],
+            'query' => [
+                'id' => $id,
+                'interval' => '5m',
+            ],
+        ]);
 
-            Log::info('Historical Data API Response: ' . $response->getBody()->getContents());
-
-            return json_decode($response->getBody()->getContents(), true);
-        } catch (\Exception $e) {
-            Log::error('Error fetching historical data: ' . $e->getMessage());
-
-            return [];
-        }
+        return json_decode($response->getBody(), true)['data']['quotes'];
     }
 }
