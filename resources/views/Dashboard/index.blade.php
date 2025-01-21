@@ -42,15 +42,12 @@
     <script>
         const cryptoData = JSON.parse('@json($cryptoData)');
 
-
+        console.log(cryptoData);
         document.getElementById('cryptoSelect').addEventListener('change', function() {
             const coinId = this.value;
-
-
             const selectedCoin = cryptoData.find(coin => coin.id == coinId);
 
             if (selectedCoin) {
-
                 document.getElementById('coinName').innerText = selectedCoin.name;
                 document.getElementById('coinSymbol').innerText = `Symbol: ${selectedCoin.symbol}`;
                 document.getElementById('coinPrice').innerText = `Price: $${selectedCoin.price.toFixed(2)}`;
@@ -62,34 +59,29 @@
                 document.getElementById('coinVolume').innerText = `Volume (24h): ${selectedCoin.volume_24h.toFixed(2)}`;
 
 
-
-                document.getElementById('coinDetail').style.display = 'block';
-
-
                 fetch(`/crypto/chart-data/${coinId}`)
                     .then(response => response.json())
                     .then(data => {
+                        console.log(data)
                         renderChart(data);
-                    })
-                    .catch(error => console.error('Error fetching chart data:', error));
+                    });
             } else {
-
                 document.getElementById('coinDetail').style.display = 'none';
             }
         });
+
 
 
         let chartInstance;
 
         function renderChart(chartData) {
 
-            if (chartInstance) {
-                chartInstance.destroy();
-            }
 
             const ctx = document.getElementById('coinChart').getContext('2d');
 
-
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
 
             chartInstance = new Chart(ctx, {
                 type: 'line',
@@ -108,16 +100,10 @@
                     responsive: true,
                     scales: {
                         y: {
-                            beginAtZero: false,
-                        },
-                        x: {
-                            type: 'time',
-                            time: {
-                                unit: 'hour',
-                            },
-                        },
-                    },
-                },
+                            beginAtZero: false
+                        }
+                    }
+                }
             });
         }
     </script>
