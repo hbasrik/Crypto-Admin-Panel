@@ -10,8 +10,6 @@ body {
     background: #ffffff;
     border-radius: 2rem;
     box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.1);
-    height: 100% !important;
-    width: 100% !important;
 }
 
 h1 {
@@ -71,16 +69,5 @@ h1 {
     gap: 1rem;
 }
 
-@media (min-width: 1400px) {
-    .container {
-        max-width: 1140px !important;
-    }
-}
-
-@media (min-width: 768px) {
-    .container{
-        max-width: 90%;
-    }
-}
 
 
