@@ -4,12 +4,8 @@
 }
 body {
     font-family: 'Roboto', sans-serif;
-}
-
-.container {
-    background: #ffffff;
-    border-radius: 2rem;
-    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.1);
+    height: 100% !important;
+    width: 100% !important;
 }
 
 h1 {
@@ -18,14 +14,18 @@ h1 {
     margin-bottom: 0 !important;
 }
 
-#form-group-container {
+#form_group_container {
     border-radius: .5rem;
     display: flex;
     justify-content: flex-start;
 }
 
-#from-group {
+#from_group {
     width: 150px;
+}
+
+#crypto_select {
+    cursor: pointer;
 }
 
 #coinChange1d {
@@ -41,7 +41,17 @@ h1 {
     border-radius: 5px;
 }
 
-#chart-container canvas {
+#coinVolume {
+    font-size: large;
+}
+
+#chart_container {
+    position: relative;
+    height: 45% !important;
+    width: 90% !important;
+}
+
+canvas {
     width: 100% !important;
     height: 100% !important;
 }
@@ -55,10 +65,10 @@ h1 {
     display: none;
     padding: 3px;
     border-radius: 12px;
-    font-weight: 500;
+    font-weight: 600;
 }
 
-#coin_volume_div{
+#coin_volume_div {
     display: flex;
     align-items: flex-end;
 }
@@ -71,13 +81,12 @@ h1 {
     gap: 1rem;
 }
 
-/* @media screen and (min-width: 768px){
+@media screen and (max-width: 768px){
 
-    #container {
-
+    #coin_main_detail {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: .5rem;
     }
-    #chart-container canvas {
 
-    }
-
-} */
+}
