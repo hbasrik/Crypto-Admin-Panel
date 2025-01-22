@@ -18,26 +18,31 @@ class CryptoController extends Controller
     public function index()
     {
 
-        $cryptoData = $this->cryptoService->getCryptoData();
+        try {
+            $cryptoData = $this->cryptoService->getCryptoData();
 
-        $cryptoProcessedData = array_map(function ($crypto) {
-            return [
-                'id' => $crypto['id'],
-                'name' => $crypto['name'],
-                'symbol' => $crypto['symbol'],
-                'price' => $crypto['quote']['USD']['price'],
-                'percent_change_1h' => $crypto['quote']['USD']['percent_change_1h'],
-                'percent_change_24h' => $crypto['quote']['USD']['percent_change_24h'],
-                'percent_change_7d' => $crypto['quote']['USD']['percent_change_7d'],
-                'percent_change_30d' => $crypto['quote']['USD']['percent_change_30d'],
-                'percent_change_90d' => $crypto['quote']['USD']['percent_change_90d'],
-                'volume_24h' => $crypto['quote']['USD']['volume_24h'],
-            ];
-        }, $cryptoData['data']);
+            $cryptoProcessedData = array_map(function ($crypto) {
+                return [
+                    'id' => $crypto['id'],
+                    'name' => $crypto['name'],
+                    'symbol' => $crypto['symbol'],
+                    'price' => $crypto['quote']['USD']['price'],
+                    'percent_change_1h' => $crypto['quote']['USD']['percent_change_1h'],
+                    'percent_change_24h' => $crypto['quote']['USD']['percent_change_24h'],
+                    'percent_change_7d' => $crypto['quote']['USD']['percent_change_7d'],
+                    'percent_change_30d' => $crypto['quote']['USD']['percent_change_30d'],
+                    'percent_change_90d' => $crypto['quote']['USD']['percent_change_90d'],
+                    'volume_24h' => $crypto['quote']['USD']['volume_24h'],
+                ];
+            }, $cryptoData['data']);
 
-        return view('dashboard.index', [
-            'cryptoData' => $cryptoProcessedData,
-        ]);
+            return view('dashboard.index', [
+                'cryptoData' => $cryptoProcessedData,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching cryptocurrency data: ' . $e->getMessage());
+            return redirect()->route('dashboard')->withErrors('Failed to load cryptocurrency data.');
+        }
     }
 
     public function getChartData($id)
