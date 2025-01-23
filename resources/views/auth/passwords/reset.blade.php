@@ -1,5 +1,5 @@
 @extends('layouts.app')
-<link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
+<link href="{{ secure_asset('css/dashboard.css') }}" rel="stylesheet">
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
