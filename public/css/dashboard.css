@@ -67,7 +67,7 @@ h1 {
     background-color: white;
     position: absolute;
     z-index: 1;
-    width: 200px;
+    width: auto;
 }
 
 #searchResults li {
