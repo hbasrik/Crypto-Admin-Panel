@@ -24,7 +24,7 @@ class CryptoService
                 'Accept' => 'application/json',
             ],
             'query' => [
-                'limit' => 100,
+                'limit' => 500,
                 'convert' => 'USD',
             ],
 
